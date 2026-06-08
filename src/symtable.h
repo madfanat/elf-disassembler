@@ -17,16 +17,16 @@ struct Symbol {
   uint8_t type = 0;
   uint8_t bind = 0;
   uint8_t visibility = 0;
-  uint16_t section_index = 0;
+  uint16_t section = 0;
   std::string name;
 };
 
-struct Table {
-  std::vector<Symbol> symbols;
-};
+inline constexpr uint8_t kTypeSection = 3;
+inline constexpr uint8_t kTypeFile = 4;
+inline constexpr uint8_t kBindLocal = 0;
 
-std::expected<Table, std::string> Parse(
-    std::span<const char> data, const elf::Section& symtab,
-    const elf::Section& string_table);
+std::expected<std::vector<Symbol>, std::string> Parse(
+    std::span<const uint8_t> data, const elf::Section& symtab,
+    const elf::Section& strtab);
 
 }  // namespace symtable

@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <expected>
+#include <optional>
 #include <span>
 #include <string>
 #include <vector>
@@ -11,25 +12,17 @@
 
 namespace text {
 
-struct Label {
-  uint32_t address = 0;
-  std::string name;
-};
-
 struct Instruction {
   uint32_t address = 0;
   uint32_t code = 0;
   std::string mnemonic;
-  std::string arguments;
+  std::string operands;
+  std::string label;
+  std::optional<uint32_t> target;
 };
 
-struct Text {
-  std::vector<Instruction> instructions;
-  std::vector<Label> labels;
-};
-
-std::expected<Text, std::string> Parse(
-    std::span<const char> data, const elf::Section& text_section,
+std::expected<std::vector<Instruction>, std::string> Parse(
+    std::span<const uint8_t> data, const elf::Section& text,
     const std::vector<symtable::Symbol>& symbols);
 
 }  // namespace text
